@@ -17,7 +17,7 @@ class ZeroXClock:
 
     def start(self):
         terminal_size = self.get_terminal_size()
-        current_time = self.get_current_time()
+        current_time = self.get_current_time(include_seconds=self.show_seconds)
         self.clear_screen()
         self.print_clock(current_time, terminal_size, blink=False)
         colon_positions = self.calculate_colon_positions(current_time, terminal_size)
@@ -34,7 +34,7 @@ class ZeroXClock:
                 self.blink = not self.blink
 
                 new_terminal_size = self.get_terminal_size()
-                new_time = self.get_current_time()
+                new_time = self.get_current_time(include_seconds=self.show_seconds)
 
                 if new_terminal_size != terminal_size:
                     terminal_size = new_terminal_size
@@ -104,7 +104,7 @@ class ZeroXClock:
         y_space = (terminal_size[1] - clock_height) // 2
         colon_index = current_time.index(':')
         positions = []
-        for height in [1, 3]:  # Строки, где двоеточие имеет "██"
+        for height in [1, 3]:
             line_parts = [zerox_numbers_lines[number][height] for number in current_time]
             total_width = sum(len(part) for part in line_parts) + 2 * (len(current_time) - 1)
             x_space = (terminal_size[0] - total_width) // 2
@@ -120,7 +120,7 @@ class ZeroXClock:
                 print('██', end='')
             else:
                 print('  ', end='')
-        print('\033[999;999H', end='')  # Переместить курсор в конец экрана
+        print('\033[999;999H', end='')
         sys.stdout.flush()
 
     @staticmethod
